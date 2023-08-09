@@ -1,0 +1,31 @@
+.text-nature{
+	color: inherit;
+}
+
+.text-nature:hover{
+	color: #0aad0a;
+}
+
+.green{
+	color: #0aad0a !important;
+}
+
+#passwordToggler2{
+	color:#001e2b;
+	cursor:pointer;
+	font-size:16px;
+	position:absolute;
+	right:20px;
+	top:50%;
+	transform:translateY(-50%)
+}
+
+/*makes a text to by cut short if it's more than a line and it adds ...*/
+.ellipsis-oneline {
+    /*display: -webkit-box;*/
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

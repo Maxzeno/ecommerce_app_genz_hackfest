@@ -1,0 +1,66 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- Mirrored from freshcart.codescandy.com/pages/signup.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 13 Mar 2023 06:57:09 GMT -->
+<head>
+
+  <title>{% block title %} {% endblock %} </title>
+  <!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta content="Codescandy" name="author">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-M8S4MT3EYG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M8S4MT3EYG');
+</script>
+
+<!-- Favicon icon-->
+<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/icon nobg-crop.png' %}">
+
+
+<!-- Libs CSS -->
+<link href="{% static 'assets/libs/bootstrap-icons/font/bootstrap-icons.css' %}" rel="stylesheet">
+<link href="{% static 'assets/libs/feather-webfont/dist/feather-icons.css' %}" rel="stylesheet">
+<link href="{% static 'assets/libs/simplebar/dist/simplebar.min.css' %}" rel="stylesheet">
+
+
+<!-- Theme CSS -->
+<link rel="stylesheet" href="{% static 'assets/css/theme.min.css' %}">
+<link rel="stylesheet" href="{% static 'style.css' %}">
+
+
+</head>
+
+<body>
+{% include '../include/navbar_auth.html' %}
+
+{% block content %}{% endblock %}
+
+{% include '../include/footer.html' %}
+
+  <!-- Javascript-->
+  <!-- Libs JS -->
+<script src="{% static 'assets/libs/jquery/dist/jquery.min.js' %}"></script>
+<script src="{% static 'assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/libs/simplebar/dist/simplebar.min.js' %}"></script>
+
+<!-- Theme JS -->
+<script src="{% static 'assets/js/theme.min.js' %}"></script>
+  <script src="{% static 'assets/js/vendors/password.js' %}"></script>
+<script src="{% static 'main.js' %}"></script>
+
+
+{% block script %}{% endblock %}
+
+</body>
+</html>
