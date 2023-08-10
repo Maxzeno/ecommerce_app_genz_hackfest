@@ -1,0 +1,70 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+  <main>
+  <!-- section -->
+  <section class="my-lg-14 my-8">
+    <div class="container">
+      <!-- row -->
+      <div class="row justify-content-center align-items-center">
+        <div class="col-12 col-md-6 col-lg-4 order-lg-1 order-2">
+          <!-- img -->
+          <img src="{% static 'assets/images/svg-graphics/signin-g.svg' %}" alt="" class="img-fluid">
+        </div>
+        <!-- col -->
+        <div class="col-12 col-md-6 offset-lg-1 col-lg-4 order-lg-2 order-1">
+          <div class="mb-lg-9 mb-5">
+            <h1 class="mb-1 h2 fw-bold">Sign in to Nime</h1>
+            <p>Welcome back to Nime! Enter your email to get started.</p>
+          </div>
+
+          <form action="/login" method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+              <!-- row -->
+
+              <div class="col-12">
+                <!-- input -->
+                {{ form.email }}
+              </div>
+              <div class="col-12">
+                <!-- input -->
+                <div class="password-field position-relative">
+      {{ form.password }}
+      <span><i id="passwordToggler"class="bi bi-eye-slash"></i></span>
+    </div>
+
+              </div>
+              <div class="d-flex justify-content-between">
+                <!-- form check -->
+                <div class="form-check">
+                  {{ form.remember }}
+                  <!-- label --> <label class="form-check-label" for="flexCheckDefault">
+                    Remember me
+                  </label>
+                </div>
+                <div> <a href="/forgot-password" class="text-nature">Forgot password? </a></div>
+              </div>
+              <!-- btn -->
+              <div class="col-12 d-grid"> <button type="submit" class="btn btn-primary">Sign In</button>
+              </div>
+              {% if messages %}
+                <div class="text-danger small" role="alert">
+                {% for message in messages %}
+                  {{ message }}
+                {% endfor %}
+                </div>
+              {% endif %}
+              <!-- link -->
+              <div>Don’t have an account? <a href="/signup"> Sign Up</a></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+{% endblock %}

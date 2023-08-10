@@ -1,0 +1,188 @@
+{% load static %}
+<html lang="en">
+
+
+<!-- Mirrored from freshcart.codescandy.com/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 13 Mar 2023 06:52:57 GMT -->
+<head>
+
+  <title> {% block title %} {% endblock %} </title>
+  <link href="{% static 'assets/libs/slick-carousel/slick/slick.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/libs/slick-carousel/slick/slick-theme.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/libs/tiny-slider/dist/tiny-slider.css' %}" rel="stylesheet">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta content="Codescandy" name="author">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M8S4MT3EYG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-M8S4MT3EYG');
+    </script>
+
+    <!-- Favicon icon-->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/icon-nobg-crop.png' %}">
+
+
+    <!-- Libs CSS -->
+    <link href="{% static 'assets/libs/bootstrap-icons/font/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/libs/feather-webfont/dist/feather-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/libs/simplebar/dist/simplebar.min.css' %}" rel="stylesheet">
+
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/theme.min.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+{% block style %}{% endblock %}
+
+</head>
+
+
+<body>
+{% include 'include/navbar.html' %}
+
+{% block content %}{% endblock %}
+
+<div id="cookie-consent" class="text-center" style="position: fixed; bottom: 0; width: 100%; background-color: #333; color: #fff; padding: 10px; z-index: 10; display: none;">
+  <span class="me-3">This website uses cookies to ensure you get the best experience on our website. Learn more about our <a href="/privacy-policy">Privacy Policy</a>.</span>
+  <button id="cookie-accept" style="display: inline;">Accept</button>
+</div>
+
+  <!-- footer -->
+{% include 'include/footer.html' %}
+
+
+    <!-- Javascript-->
+  <script src="{% static 'assets/libs/rater-js/index.js' %}"></script>
+  <script src="{% static 'assets/libs/dropzone/dist/min/dropzone.min.js' %}"></script>
+
+  <!-- Libs JS -->
+<script src="{% static 'assets/libs/jquery/dist/jquery.min.js' %}"></script>
+<script src="{% static 'assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/libs/simplebar/dist/simplebar.min.js' %}"></script>
+
+<!-- Theme JS -->
+<script src="{% static 'assets/js/theme.min.js' %}"></script>
+  <script src="{% static 'assets/libs/jquery-countdown/dist/jquery.countdown.min.js' %}"></script>
+  <script src="{% static 'assets/js/vendors/countdown.js' %}"></script>
+  <script src="{% static 'assets/libs/slick-carousel/slick/slick.min.js' %}"></script>
+  <script src="{% static 'assets/js/vendors/slick-slider.js' %}"></script>
+  <script src="{% static 'assets/libs/tiny-slider/dist/min/tiny-slider.js' %}"></script>
+  <script src="{% static 'assets/js/vendors/tns-slider.js' %}"></script>
+  <script src="{% static 'assets/js/vendors/zoom.js' %}"></script>
+<script src="{% static 'assets/js/vendors/increment-value.js' %}"></script>
+<script src="{% static 'main.js' %}"></script>
+
+<script>
+
+async function req(pk, path_name) {
+  let response = await fetch(`/${path_name}/${pk}`)
+  if (response) {
+    let data = await response.json();
+    return data;
+  }
+}
+
+
+async function add_product_cart(current, pk) {
+  current.classList.toggle('d-none');
+  current.nextElementSibling.nextElementSibling.classList.toggle('d-none');
+  let res = await req(pk, 'cart-plus')
+  if (res.ok){
+    current.nextElementSibling.nextElementSibling.classList.toggle('d-none');
+    current.nextElementSibling.classList.toggle('d-none');
+    let cart_number = document.querySelectorAll('.cart-number-of-items');
+    cart_number.forEach((e) =>{
+      e.innerText = Number(e.innerText) + 1
+    })
+  }
+}
+
+async function remove_product_cart(current, pk) {
+    // current.classList.toggle('d-none');
+    // current.previousElementSibling.classList.toggle('d-none');
+  let res = await req(pk, 'cart-remove')
+  if (res.ok){
+    current.classList.toggle('d-none');
+    current.previousElementSibling.classList.toggle('d-none');
+    let cart_number = document.querySelectorAll('.cart-number-of-items');
+    cart_number.forEach((e) =>{
+      e.innerText = Number(e.innerText) - 1
+    })
+  }
+}
+
+async function remove_cart(pk) {
+  let res = await req(pk, 'cart-remove')
+  if (res.ok){
+    let product = document.querySelector(`#product${pk}`);
+    product.style.display = 'none';
+
+    let cart_number = document.querySelectorAll('.cart-number-of-items');
+    cart_number.forEach((e) =>{
+      e.innerText = Number(e.innerText) - 1
+
+    document.getElementById('total-price').innerText = "₦" + res.total;
+      
+    })
+  }
+}
+
+async function plus_cart(current, pk) {
+  current.previousElementSibling.classList.toggle('spinner-border');
+  let res = await req(pk, 'cart-plus')
+  if (res.ok){
+    current.previousElementSibling.classList.toggle('spinner-border');
+
+    let num = Number(current.previousElementSibling.value);
+    current.previousElementSibling.value = num + 1;
+
+    current.parentElement.parentElement.nextElementSibling.firstElementChild.innerText = "₦" + res.price;
+
+    document.getElementById('total-price').innerText = "₦" + res.total;
+  }
+}
+
+async function minus_cart(current, pk) {
+  current.nextElementSibling.classList.toggle('spinner-border');
+  let res = await req(pk, 'cart-minus')
+  if (res.ok){
+    current.nextElementSibling.classList.toggle('spinner-border');
+    let num = Number(current.nextElementSibling.value);
+    current.nextElementSibling.value = num > 1 ? num - 1 : 1;
+
+    current.parentElement.parentElement.nextElementSibling.firstElementChild.innerText = "₦" + res.price;
+
+    document.getElementById('total-price').innerText = "₦" + res.total;
+  }
+}
+
+</script>
+
+<script>
+  // Check if the user has already accepted cookies
+if (document.cookie.indexOf('cookieAccepted=true') === -1) {
+  // Hide the cookie consent popup
+  document.getElementById('cookie-consent').style.display = 'block';
+}
+
+// Add event listener to the Accept button
+document.getElementById('cookie-accept').addEventListener('click', function() {
+  // Set a cookie to remember that the user has accepted cookies
+  document.cookie = 'cookieAccepted=true; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/';
+  
+  // Hide the cookie consent popup
+  document.getElementById('cookie-consent').style.display = 'none';
+});
+
+</script>
+{% block script %}{% endblock %}
+
+</body>
+</html>
