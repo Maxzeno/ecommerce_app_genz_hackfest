@@ -181,4 +181,62 @@ class ForgotPassword(Base):
 
 
 class ResetPassword(Base):
-	pass
+	def get_request(self, request, token):
+		try:
+			s = URLSafeTimedSerializer(settings.SECRET_KEY)
+			the_user_id = s.loads(token, salt='email-reset', max_age=200000)
+			form =  ResetPasswordForm()
+			nav_text = 'Already have an account?'
+			nav_link = reverse('login:signin')
+			nav_value = 'Sign in'
+			return (request, 'login/reset_password.html', {'form':form, 'nav_text': nav_text,
+				'nav_link': nav_link, 'nav_value': nav_value})
+
+		except SignatureExpired:
+			return (request, 'login/status_msg.html', {
+				'title':'Token expired', 
+				'msg':'This Token Has expired.', 
+				'link': reverse("login:forgot-password"),
+				'value': 'Get new one',
+			})
+
+	def post_request(self, request, token):
+		try:
+			form =  ResetPasswordForm(request.POST)
+			s = URLSafeTimedSerializer(settings.SECRET_KEY)
+			if form.is_valid():
+				the_user_id = s.loads(token, salt='email-reset', max_age=200000)
+				user = models.User.objects.get(id=the_user_id)
+				user.password = form.cleaned_data.get('password', '')
+				user.save()
+				return (request, 'login/status_msg.html', {
+					'title':'Password reset done', 
+					'msg':'Your password has been resetted successfully.', 
+					'link': reverse('login:signin'),
+					'value': 'Signin',				
+				})
+			return (request, 'login/reset_password.html', {'form':form})
+
+		except SignatureExpired:
+			return (request, 'login/status_msg.html', {
+				'title':'Token expired', 
+				'msg':'This token has expired.', 
+				'link': reverse("login:forgot-password"),
+				'value': 'Get new one',
+			})
+
+
+class Signout(Base):
+	def get_request(self, request):
+		logout(request)
+		return redirect('main:index')
+
+
+class Suspended(Base):
+	def get_request(self, request, email):
+		return (request, 'login/status_msg.html', {
+				'title': 'User suspended', 
+				'msg': f'User with email {email} have been suspended.', 
+				'link': '#',
+				'value': 'Contact admin',
+			})
