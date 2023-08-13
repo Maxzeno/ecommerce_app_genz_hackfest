@@ -50,6 +50,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_bootstrap5',
+    'ckeditor',
+    'django_summernote',
+    'django_user_agents',
+    'paystack',
     'main',
     'login',
     'core',
@@ -199,3 +204,281 @@ else:
 
 
 LOGIN_URL = '/login'
+
+
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'width': '100%',
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline', 'Strike'],
+            ['NumberedList', 'BulletedList', 'Outdent', 'Indent'],
+            ['Link', 'Unlink', 'Anchor'],
+            ['Undo', 'Redo'],
+            ['Format', 'Styles'],
+            ['RemoveFormat', 'Source']
+        ],
+        'removePlugins': 'image',
+        'removeButtons': 'Source',
+    }
+}
+
+
+JAZZMIN_SETTINGS = {
+    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    "site_title": "Unique Favor Store",
+
+    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_header": "Unique Favor Store",
+
+    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_brand": "Favor Admin",
+
+    # Logo to use for your site, must be present in static files, used for brand on top left
+    "site_logo": "img/icon nobg-crop.png",
+
+    # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
+    "login_logo": 'img/icon-sm nobg.png',
+
+    # Logo to use for login form in dark themes (defaults to login_logo)
+    "login_logo_dark": None,
+
+    # CSS classes that are applied to the logo above
+    "site_logo_classes": "",
+
+    # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
+    "site_icon": 'img/icon nobg-crop.png',
+
+    # Welcome text on the login screen
+    "welcome_sign": "Welcome to the Unique Favor Store",
+
+    # Copyright on the footer
+    "copyright": "Unique Favor Store",
+
+    # List of model admins to search from the search bar, search bar omitted if excluded
+    # If you want to use a single search field you dont need to use a list, you can use a simple string 
+    "search_model": "core.User",
+
+    # Field name on user model that contains avatar ImageField/URLField/Charfield or a callable that receives the user
+    "user_avatar": None,
+
+    ############
+    # Top Menu #
+    ############
+
+    # Links to put along the top menu
+    "topmenu_links": [
+
+        # Url that gets reversed (Permissions can be added)
+        {"name": "Home",   "url": "main:index", "new_window": True},
+
+        # external url that opens in a new window (Permissions can be added)
+        {"name": "Dashboard", "url": "admin:index", "permissions": ["core.view_user"]},
+
+        # model admin to link to (Permissions checked against model)
+        {"model": "core.User"},
+
+        # App with dropdown menu to all its models pages (Permissions checked against models)
+        # {"app": "user"},
+    ],
+
+    #############
+    # User Menu #
+    #############
+
+    # Additional links to include in the user menu on the top right ("app" url type is not allowed)
+    # "usermenu_links": [
+    #     {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+    #     {"model": "auth.user"}
+    # ],
+
+    #############
+    # Side Menu #
+    #############
+
+    # Whether to display the side menu
+    "show_sidebar": True,
+
+    # Whether to aut expand the menu
+    "navigation_expanded": True,
+
+    # Hide these apps when generating side menu e.g (auth)
+    "hide_apps": [],
+
+    # Hide these models when generating side menu (e.g auth.user)
+    "hide_models": [],
+
+    # List of apps (and/or models) to base side menu ordering off of (does not need to contain all apps/models)
+    "order_with_respect_to": ["core.user", "core.product", "core.order", "core.category", "core.subcategory", "core.address"],
+
+    # Custom links to append to app groups, keyed on app name
+    # "custom_links": {
+    #     "books": [{
+    #         "name": "Make Messages", 
+    #         "url": "make_messages", 
+    #         "icon": "fas fa-comments",
+    #         "permissions": ["books.view_book"]
+    #     }]
+    # },
+
+    # Custom icons for side menu apps/models See https://fontawesome.com/icons?d=gallery&m=free&v=5.0.0,5.0.1,5.0.10,5.0.11,5.0.12,5.0.13,5.0.2,5.0.3,5.0.4,5.0.5,5.0.6,5.0.7,5.0.8,5.0.9,5.1.0,5.1.1,5.2.0,5.3.0,5.3.1,5.4.0,5.4.1,5.4.2,5.13.0,5.12.0,5.11.2,5.11.1,5.10.0,5.9.0,5.8.2,5.8.1,5.7.2,5.7.1,5.7.0,5.6.3,5.5.0,5.4.2
+    # for the full list of 5.13.0 free icon classes
+    "icons": {
+        "core": "fas fa-users-cog",
+        "core.user": "fas fa-user",
+        "core.product": "fas fa-shopping-bag",
+        "core.category": "fas fa-plus-square",
+        "core.subcategory": "fas fa-minus-square",
+        "core.address": "fas fa-map-marker-alt",
+        "core.contactus": "fas fa-phone-alt",
+        "core.email": "fas fa-envelope",
+        "core.order": "fas fa-shopping-cart",
+        "core.cart": "fas fa-shopping-cart",
+    },
+    # Icons that are used when one is not manually specified
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+
+    #################
+    # Related Modal #
+    #################
+    # Use modals instead of popups
+    "related_modal_active": False,
+
+    #############
+    # UI Tweaks #
+    #############
+    # Relative paths to custom CSS/JS scripts (must be present in static files)
+    "custom_css": 'jazzmin/style.css',
+    "custom_js": 'jazzmin/main.js',
+    # Whether to link font from fonts.googleapis.com (use custom_css to supply font otherwise)
+    "use_google_fonts_cdn": True,
+    # Whether to show the UI customizer on the sidebar
+    "show_ui_builder": False,
+
+    ###############
+    # Change view #
+    ###############
+    # Render out the change view as a single form, or in tabs, current options are
+    # - single
+    # - horizontal_tabs (default)
+    # - vertical_tabs
+    # - collapsible
+    # - carousel
+    "changeform_format": "horizontal_tabs",
+    # override change forms on a per modeladmin basis
+    "changeform_format_overrides": {"core.user": "collapsible", "auth.group": "vertical_tabs"},
+    # Add a language dropdown into the admin
+    # "language_chooser": True,
+}
+
+
+# SUMMERNOTE_CONFIG = {
+#     # Using SummernoteWidget - iframe mode, default
+#     # 'iframe': True,
+
+#     # Or, you can set it to `False` to use SummernoteInplaceWidget by default - no iframe mode
+#     # In this case, you have to load Bootstrap/jQuery sources and dependencies manually.
+#     # Use this when you're already using Bootstrap/jQuery based themes.
+#     'iframe': True,
+
+#     # You can put custom Summernote settings
+#     'summernote': {
+#         # As an example, using Summernote Air-mode
+#         'airMode': False,
+
+#         # Change editor size
+#         'width': '100%',
+#         'height': '480',
+
+#         # Use proper language setting automatically (default)
+#         'lang': None,
+
+#         # Toolbar customization
+#         # https://summernote.org/deep-dive/#custom-toolbar-popover
+#         'toolbar': [
+#             ['style', ['style']],
+#             ['font', ['bold', 'underline', 'clear']],
+#             ['fontname', ['fontname']],
+#             ['color', ['color']],
+#             ['para', ['ul', 'ol', 'paragraph']],
+#             ['table', ['table']],
+#             ['insert', ['link']],
+#             ['view', ['fullscreen', 'help']],
+#         ],
+
+#         # Or, explicitly set language/locale for editor
+#         # 'lang': 'ko-KR',
+#         # ...
+
+#         # You can also add custom settings for external plugins
+#         # 'print': {
+#         #     'stylesheetUrl': '/some_static_folder/printable.css',
+#         # },
+#         # 'codemirror': {
+#         #     'mode': 'htmlmixed',
+#         #     'lineNumbers': 'true',
+#         #     # You have to include theme file in 'css' or 'css_for_inplace' before using it.
+#         #     'theme': 'monokai',
+#         # },
+#     },
+
+#     # Require users to be authenticated for uploading attachments.
+#     'attachment_require_authentication': True,
+
+#     # Set `upload_to` function for attachments.
+#     # 'attachment_upload_to': my_custom_upload_to_func(),
+
+#     # Set custom storage class for attachments.
+#     # 'attachment_storage_class': 'my.custom.storage.class.name',
+
+#     # Set custom model for attachments (default: 'django_summernote.Attachment')
+#     # 'attachment_model': 'my.custom.attachment.model', # must inherit 'django_summernote.AbstractAttachment'
+
+#     # You can completely disable the attachment feature.
+#     'disable_attachment': False,
+
+#     # Set to `True` to return attachment paths in absolute URIs.
+#     # 'attachment_absolute_uri': False,
+
+#     # test_func in summernote upload view. (Allow upload images only when user passes the test)
+#     # https://docs.djangoproject.com/en/2.2/topics/auth/default/#django.contrib.auth.mixins.UserPassesTestMixin
+#     # ```
+#     # def example_test_func(request):
+#     #     return request.user.groups.filter(name='group_name').exists()
+#     # ```
+#     # 'test_func_upload_view': example_test_func,
+
+#     # You can add custom css/js for SummernoteWidget.
+#     # 'css': (
+#     # ),
+#     # 'js': (
+#     # ),
+
+#     # You can also add custom css/js for SummernoteInplaceWidget.
+#     # !!! Be sure to put {{ form.media }} in template before initiate summernote.
+#     # 'css_for_inplace': (
+#     # ),
+#     # 'js_for_inplace': (
+#     # ),
+
+#     # Codemirror as codeview
+#     # If any codemirror settings are defined, it will include codemirror files automatically.
+#     'css': (
+#         '//cdnjs.cloudflare.com/ajax/libs/codemirror/5.29.0/theme/monokai.min.css',
+#     ),
+
+#     # Lazy initialization
+#     # If you want to initialize summernote at the bottom of page, set this as True
+#     # and call `initSummernote()` on your page.
+#     'lazy': False,
+
+#     # To use external plugins,
+#     # Include them within `css` and `js`.
+#     # 'js': {
+#     #     '/some_static_folder/summernote-ext-print.js',
+#     #     '//somewhere_in_internet/summernote-plugin-name.js',
+#     # },
+# }
