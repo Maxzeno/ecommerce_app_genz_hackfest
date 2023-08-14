@@ -1,0 +1,43 @@
+{% load static %}
+  
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAccount" aria-labelledby="offcanvasAccountLabel">
+    <!-- offcanvas header -->
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasAccountLabel">Menu</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+      <!-- offcanvas body -->
+    <div class="offcanvas-body">
+      <ul class="nav flex-column nav-pills nav-pills-dark">
+         <!-- nav item -->
+        <li class="nav-item">
+          <a class="nav-link {{ cart }}" aria-current="page" href="/cart"><i
+              class="feather-icon icon-shopping-cart me-2"></i>Your Cart</a>
+        </li>
+          <!-- nav item -->
+        <li class="nav-item">
+          <a class="nav-link {{ orders }}" aria-current="page" href="/orders"><i
+              class="feather-icon icon-shopping-bag me-2"></i>Your Orders</a>
+        </li>
+          <!-- nav item -->
+        <li class="nav-item">
+          <a class="nav-link {{ settings }}" href="/settings"><i class="feather-icon icon-settings me-2"></i>Settings</a>
+        </li>
+          <!-- nav item -->
+        <li class="nav-item">
+          <a class="nav-link {{ address }}" href="/address"><i class="feather-icon icon-map-pin me-2"></i>Address</a>
+        </li>
+      </ul>
+      <hr class="my-6">
+      <div>
+          <!-- nav  -->
+        <ul class="nav flex-column nav-pills nav-pills-dark">
+            <!-- nav item -->
+          <li class="nav-item">
+            <a class="nav-link " href="/signout"><i class="feather-icon icon-log-out me-2"></i>Log out</a>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>

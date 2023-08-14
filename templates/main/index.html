@@ -1,0 +1,195 @@
+{% extends '../base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<main>
+<!--  <section class="mt-8">
+      <div class="container">
+          <div
+            style="background: url({% static 'img/hero custom.png' %})no-repeat; background-size: cover; border-radius: .5rem; background-position: center;"> -->
+    <section class="py-lg-16 py-10"
+            style="background: url({% static 'img/hero-custom.png' %})no-repeat; background-position: center; background-size: cover;">
+        <div class="container">
+
+            <div class="ps-lg-12 py-lg-7 col-xxl-5 col-md-7 py-14 px-8 text-xs-center">
+              <span class="badge text-bg-warning">Shop at an affordable price</span>
+
+              <h2 class="text-dark display-5 fw-bold mt-4">Buy the cool stuff</h2>
+              <p class="lead">Buy what you want and get it fast at an affordable rate.</p>
+              <a href="/products" class="btn btn-dark mt-3">Shop Now <i class="feather-icon icon-arrow-right ms-1"></i></a>
+            </div>
+
+          </div>
+      </div>
+    </section>
+
+<section class="my-lg-14 my-8">
+    <!-- category -->
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <div class="col-12">
+          <div class="mb-8">
+            <!-- heading -->
+            <h3 class="mb-0">Shop by Category</h3>
+          </div>
+        </div>
+
+      </div>
+      <!-- row -->
+      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-6 g-6">
+
+        {% for category in categories %}
+        <!-- col -->
+        <div class="col"> <a href="/products?category={{ category }}" class="text-decoration-none text-inherit">
+            <!-- card -->
+            <div class="card card-product">
+              <div class="card-body text-center py-8">
+                <!-- img -->
+                <img src="{{ category.image|image_url }}" alt="Grocery Ecommerce Template"
+                  class="mb-3 img-fluid" style="height: 120px">
+                <!-- text -->
+                <div class="text-truncate">{{ category.name }}</div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+
+      </div>
+
+
+    </div>
+  </section>
+
+  <section>
+
+    <div class="container ">
+      <div class="row">
+        <div class="col-12">
+
+          <div class="mb-4 bg-light d-lg-flex justify-content-between align-items-center rounded">
+            <div class="  p-10">
+
+              <h2 class="mb-1 fw-bold">Get the best products</h2>
+              <p class="mb-0 lead">Everything you want at your finger tips.
+                quality and fast delivery assured.
+              </p>
+              <a href="/products" class="btn btn-dark mt-5">Start Shopping</a>
+
+            </div>
+            <div class="p-6 d-lg-block d-none"><img src="{% static 'assets/images/svg-graphics/store-graphics.svg' %}" alt=""
+                class="img-fluid">
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <section class="my-lg-14 my-8">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 mb-6">
+
+            <h3 class="mb-0">Popular Products</h3>
+
+          </div>
+        </div>
+
+        {% with col=3 %}
+            {% include '../include/product_card.html' with col=col %}
+          {% endwith%}
+  </div>
+</section>
+
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-lg-3">
+            <div class="mb-8 mb-xl-0">
+              <div class="mb-6"><img src="{% static 'assets/images/icons/clock.svg' %}" alt=""></div>
+              <h3 class="h5 mb-3">
+                10 minute grocery now
+              </h3>
+              <p>Get your order delivered to your doorstep at the earliest from FreshCart pickup stores near you.</p>
+            </div>
+          </div>
+          <div class="col-md-6  col-lg-3">
+            <div class="mb-8 mb-xl-0">
+              <div class="mb-6"><img src="{% static 'assets/images/icons/gift.svg' %}" alt=""></div>
+              <h3 class="h5 mb-3">Best Prices & Offers</h3>
+              <p>Cheaper prices than your local supermarket, great cashback offers to top it off. Get best pricess &
+                offers.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="mb-8 mb-xl-0">
+              <div class="mb-6"><img src="{% static 'assets/images/icons/package.svg' %}" alt=""></div>
+              <h3 class="h5 mb-3">Wide Assortment</h3>
+              <p>Choose from 5000+ products across food, personal care, household, bakery, veg and non-veg & other
+                categories.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="mb-8 mb-xl-0">
+              <div class="mb-6"><img src="{% static 'assets/images/icons/refresh-cw.svg' %}" alt=""></div>
+              <h3 class="h5 mb-3">Easy Returns</h3>
+              <p>Not satisfied with a product? Return it at the doorstep & get a refund within hours. No questions asked policy.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+     <section class="bg-dark"
+    style="background:url({% static 'assets/images/svg-graphics/pattern.svg' %})no-repeat; background-size: cover; background-position: center;">
+    <div class="container">
+       <!-- row -->
+      <div class="row">
+        <div class="offset-lg-1 col-lg-10">
+
+          <div class="row align-items-center">
+             <!-- col -->
+            <div class="col-md-6">
+              <div class="text-white mt-8 mt-lg-0">
+                <h2 class="h2 text-white  my-4">Get top deals, latest trends,
+                  and more.</h2>
+                <p class="text-white-50">Join our email subscription now to get updates on promotions
+                  and coupons.</p>
+                   <!-- form -->
+                <form action="{% url 'main:email_subscribe' %}" method="post" class="row g-3">
+                  {% csrf_token %}
+
+                  <div class="col-6">
+                     <!-- input -->
+                    <label for="emailAddress" class="visually-hidden">Email Address</label>
+                    {{ email_form.email }}
+                  </div>
+                   <!-- btn -->
+                  <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-3">Sign Up</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+             <!-- col -->
+            <div class="col-md-6">
+              <div class="text-center">
+                 <!-- img -->
+                <img src="{% static 'img/email-removebg.png' %}" alt="" style="filter: brightness(85%);" class="img-fluid d-md-block d-none">
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% load static %}
+
+<div class="col-lg-3 col-md-4 col-12 border-end  d-none d-md-block">
+  <div class="pt-10 pe-lg-10">
+    <!-- nav item -->
+    <ul class="nav flex-column nav-pills nav-pills-dark">
+      <li class="nav-item">
+        <a class="nav-link {{ cart }}" href="/cart"><i
+            class="feather-icon icon-shopping-cart me-2"></i>Cart</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link  {{ orders }}" aria-current="page" href="/orders"><i
+            class="feather-icon icon-shopping-bag me-2"></i>Your Orders</a>
+      </li>
+      <!-- nav item -->
+      <li class="nav-item">
+        <a class="nav-link {{ settings }}" href="/settings"><i
+            class="feather-icon icon-settings me-2"></i>Settings</a>
+      </li>
+      <!-- nav item -->
+      <li class="nav-item">
+        <a class="nav-link {{ address }}" href="/address"><i
+            class="feather-icon icon-map-pin me-2"></i>Address</a>
+      </li>
+      <!-- nav item -->
+      <li class="nav-item">
+        <hr>
+      </li>
+      <!-- nav item -->
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'login:signout' %}"><i class="feather-icon icon-log-out me-2"></i>Log out</a>
+      </li>
+    </ul>
+  </div>
+</div>

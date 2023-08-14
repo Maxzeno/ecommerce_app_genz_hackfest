@@ -1,0 +1,34 @@
+{% load static %}
+{% load custom_filters %}
+
+
+<div class="row g-4 row-cols-lg-{{ col }} row-cols-{{ col|subtract:2 }} row-cols-md-{{ col|subtract:1}}">
+    {% for product in products %}
+    <div class="col">
+        <div class="card card-product">
+            <div class="card-body text-center">
+                <a href="{% url 'main:product_detail' pk=product.id %}" class="text-inherit text-decoration-none">
+                    <div class="text-center position-relative mt-4">
+                        <img src="{{ product.image|image_url }}" alt="{{ product.name }}" class="mb-3 img-fluid"
+                                style="height: 200px">
+                    </div>
+
+                    <div class="ellipsis-oneline">
+                        <span class="text-dark ellipsis-oneline">{{ product.name }}
+                    </div>
+
+                    <div class="text-small mt-2">
+                            <span class="ellipsis-oneline text-muted">{{ product.sub_category.category.name }}</span>
+                    </div>
+                
+                    <div class="mt-2">
+                        <span class="text-dark ellipsis-oneline green">₦{{ product.price|format_price }}</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+

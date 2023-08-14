@@ -1,0 +1,42 @@
+{% load static %}
+
+<div class="offcanvas-body ps-lg-2 pt-lg-0">
+  <div class="mb-8">
+    <!-- title -->
+    <h5 class="mb-3">Categories</h5>
+    <!-- nav -->
+    <ul class="nav nav-category" id="categoryCollapseMenu">
+      {% for category_and_sub in categories_and_sub %}
+        {% if category_and_sub.1 %}
+          <li class="nav-item border-bottom w-100 {% if category_and_sub.0 != request.GET.category %}collapsed{% endif %}" data-bs-toggle="collapse"
+            data-bs-target="#{{ category_and_sub.0 }}" aria-expanded="{% if category_and_sub.0 == request.GET.category %}true{% else %}false{% endif %}" aria-controls="{{ category_and_sub.0 }}">
+            <a href="#" class="nav-link {% if category_and_sub.0 == request.GET.category %}green{% endif %}">{{ category_and_sub.0 }}<i class="feather-icon icon-chevron-right"></i></a>
+            <!-- accordion collapse -->
+            <div id="{{ category_and_sub.0 }}" class="accordion-collapse collapse {% if category_and_sub.0 == request.GET.category %}show{% endif %}"
+              data-bs-parent="#categoryCollapseMenu">
+              <div>
+                <!-- nav -->
+                <ul class="nav flex-column ms-3">
+                  {% for sub in category_and_sub.1 %}
+                    <!-- nav item -->
+                    <li class="nav-item"><a href="?category={{ category_and_sub.0 }}&sub={{ sub }}" class="nav-link {% if sub == request.GET.sub %}green{% endif %}" onclick="refreshPage('{{ category_and_sub.0 }}', '{{ sub }}')">{{ sub }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<script>
+  function refreshPage(category, sub) {
+    var url = window.location.href.split('?')[0] + '?category=' + category;
+    if (sub) {
+      url += '&sub=' + sub;
+    }
+    window.location.href = url;
+  }
+</script>
