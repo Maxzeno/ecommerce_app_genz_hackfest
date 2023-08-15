@@ -1,0 +1,80 @@
+{% extends '../base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<main>
+  <!-- section -->
+  <div class="mt-8 mb-lg-14 mb-8">
+    <!-- container -->
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <!-- col -->
+        <aside class="col-lg-3 col-md-4 mb-6 mb-md-0">
+          <div class="offcanvas offcanvas-start offcanvas-collapse w-md-50 " tabindex="-1" id="offcanvasCategory" aria-labelledby="offcanvasCategoryLabel">
+
+            <div class="offcanvas-header d-lg-none">
+              <h5 class="offcanvas-title" id="offcanvasCategoryLabel">Filter</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            {% include '../include/categories.html' %}
+        </div>
+        </aside>
+        <section class="col-lg-9 col-md-12">
+          <div class="card mb-4 bg-light border-0">
+            <!-- card body -->
+            <div class="card-body p-9">
+              <h2 class="mb-0 fs-1">{% if request.GET.category %}{{ request.GET.category }}{% else %}Products{% endif %}</h2>
+            </div>
+          </div>
+          <!-- list icon -->
+          <div class="d-flex justify-content-between align-items-center my-4">
+            <div class="">
+              <span class="text-dark">{{ number_of_products }} </span> Products found
+              {% if not has_no_filter_search %}<a href="/products">reset</a>{% endif %}
+            </div>
+            <div class="d-lg-none">
+              <a class="btn btn-outline-gray-400 text-muted" data-bs-toggle="offcanvas" href="#offcanvasCategory" role="button" aria-controls="offcanvasCategory"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-filter me-2">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg> Filters</a>
+            </div>
+          </div>
+          {% with col=3 %}
+            {% include '../include/product_card.html' with col=col %}
+          {% endwith%}
+          <div class="row mt-8">
+            <div class="col">
+                     <!-- nav -->
+              <nav>
+                <ul class="pagination">
+                  <li class="page-item {% if not products.has_previous %}disabled{% endif %}">
+                    <a class="page-link" href="?page={% if products.has_previous %}{{ products.previous_page_number }}{% else %}1{% endif %}{{ url_args }}" aria-label="Previous">
+                      <!-- <i class="feather-icon icon-chevron-left"></i> -->
+                      Previous
+                    </a>
+                  </li>
+                  {% for page in page_list %}
+                  <li class="page-item "><a class="page-link  {% if page == products.number %}active{% endif %}" href="?page={{ page }}{{ url_args }}">{{ page }}</a></li>
+                  {% endfor %}
+                  <li class="page-item {% if not products.has_next %}disabled{% endif %}">
+                    <a class="page-link" href="?page={% if products.has_next %}{{ products.next_page_number }}{% else %}{{ products.number }}{% endif %}{{ url_args }}" aria-label="Next">
+                      <!-- <i class="feather-icon icon-chevron-right"></i> -->
+                      Next
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% endblock %}

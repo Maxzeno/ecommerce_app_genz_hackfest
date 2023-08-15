@@ -1,0 +1,502 @@
+{% extends '../base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Product Detail{% endblock %}
+
+{% block style %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
+
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+body{
+    line-height: 1.5;
+}
+.card-wrapper{
+    max-width: 1100px;
+    margin: 0 auto;
+}
+img{
+    width: 100%;
+    display: block;
+}
+.img-display{
+    overflow: hidden;
+}
+.img-showcase{
+    display: flex;
+    width: 100%;
+    transition: all 0.5s ease;
+}
+.img-showcase img{
+    min-width: 100%;
+}
+.img-select{
+    display: flex;
+}
+.img-item{
+    margin: 0.3rem;
+}
+.img-item:nth-child(1),
+.img-item:nth-child(2),
+.img-item:nth-child(3){
+    margin-right: 0;
+}
+.img-item:hover{
+    opacity: 0.8;
+}
+.product-content{
+    padding: 2rem 1rem;
+}
+.product-title{
+    font-size: 3rem;
+    text-transform: capitalize;
+    font-weight: 700;
+    position: relative;
+    color: #12263a;
+    margin: 1rem 0;
+}
+.product-title::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 4px;
+    width: 80px;
+    background: #12263a;
+}
+.product-link{
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    background: #256eff;
+    color: #fff;
+    padding: 0 0.3rem;
+    transition: all 0.5s ease;
+}
+.product-link:hover{
+    opacity: 0.9;
+}
+.product-rating{
+    color: #ffc107;
+}
+.product-rating span{
+    font-weight: 600;
+    color: #252525;
+}
+.product-price{
+    margin: 1rem 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+.product-price span{
+    font-weight: 400;
+}
+.last-price span{
+    color: #f64749;
+    text-decoration: line-through;
+}
+.new-price span{
+    color: #256eff;
+}
+.product-detail h2{
+    text-transform: capitalize;
+    color: #12263a;
+    padding-bottom: 0.6rem;
+}
+.product-detail p{
+    font-size: 0.9rem;
+    padding: 0.3rem;
+    opacity: 0.8;
+}
+.product-detail ul{
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+.product-detail ul li{
+    margin: 0;
+    list-style: none;
+    background: url(shoes_images/checked.png) left center no-repeat;
+    background-size: 18px;
+    padding-left: 1.7rem;
+    margin: 0.4rem 0;
+    font-weight: 600;
+    opacity: 0.9;
+}
+.product-detail ul li span{
+    font-weight: 400;
+}
+.purchase-info{
+    margin: 1.5rem 0;
+}
+.purchase-info input,
+.purchase-info .btn{
+    border: 1.5px solid #ddd;
+    border-radius: 25px;
+    text-align: center;
+    padding: 0.45rem 0.8rem;
+    outline: 0;
+    margin-right: 0.2rem;
+    margin-bottom: 1rem;
+}
+.purchase-info input{
+    width: 60px;
+}
+.purchase-info .btn{
+    cursor: pointer;
+    color: #fff;
+}
+.purchase-info .btn:first-of-type{
+    background: #256eff;
+}
+.purchase-info .btn:last-of-type{
+    background: #f64749;
+}
+.purchase-info .btn:hover{
+    opacity: 0.9;
+}
+.social-links{
+    display: flex;
+    align-items: center;
+}
+.social-links a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #000;
+    border: 1px solid #000;
+    margin: 0 0.2rem;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: all 0.5s ease;
+}
+.social-links a:hover{
+    background: #000;
+    border-color: transparent;
+    color: #fff;
+}
+
+@media screen and (min-width: 992px){
+    .card-img{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 1.5rem;
+    }
+    .card-wrapper{
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .product-imgs{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .product-content{
+        padding-top: 0;
+    }
+}
+
+
+
+
+
+.product-detail-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.size-selector-select {
+  display: flex;
+  align-items: center;
+}
+
+.size-selector-select label {
+  margin-right: 10px;
+}
+
+.size-btns-select {
+  display: flex;
+}
+
+.size-btn-select {
+  background-color: #fff;
+  color: #333;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 10px 15px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.size-btn-select.active {
+  background-color: #0aad0a;
+  color: #fff;
+  border-color: #0aad0a;
+}
+  
+.add-to-cart-btn-select {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.add-to-cart-btn-select:hover {
+  background-color: #0062cc;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<main>
+    <section class="mt-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- img slide -->
+                    <div class="product-imgs">
+                        <div class="img-display">
+                            <div class="img-showcase">
+                                <img src="{{ product.image|image_url }}" alt="shoe image">
+                                <img src="{{ product.image2|image_url }}" alt="shoe image">
+                                <img src="{{ product.image3|image_url }}" alt="shoe image">
+                            </div>
+                        </div>
+                        <div class="img-select">
+                            <div class="img-item">
+                                <a href="#" data-id="1">
+                                    <img src="{{ product.image|image_url }}" style="max-height: 100px" alt="shoe image">
+                                </a>
+                            </div>
+                            <div class="img-item">
+                                <a href="#" data-id="2">
+                                    <img src="{{ product.image2|image_url }}" style="max-height: 100px" alt="shoe image">
+                                </a>
+                            </div>
+                            <div class="img-item">
+                                <a href="#" data-id="3">
+                                    <img src="{{ product.image3|image_url }}" style="max-height: 100px" alt="shoe image">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="ps-lg-10 mt-6 mt-md-0">
+                        <!-- heading -->
+                        <h1 class="mb-1">{{ product.name }} </h1>
+                        <div class="fs-4">
+                            <!-- price -->
+                            <span class="fw-bold text-dark">₦{{ product.price | format_price }}</span>
+                            <div class="col-xxl-4 col-lg-4 col-md-5 col-5 d-grid my-6">
+                                {% if product.data %}
+                                <div class="product-detail-select">
+                                    <div class="size-selector-select">
+                                        <label>Size:</label>
+                                        <div class="size-btns-select">
+                                          {% for size in product.data.size %}
+                                            <button class="size-btn-select {% if size in sizes_in_cart %}active{% endif %}" data-size="{{ size }}">{{ size }}</button>
+                                          {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+       
+                                <button onclick="addRemoveCart()" id="cart-add" class="btn btn-primary rounded-pill {% if single_item_no_size in cart_items %}d-none{% endif %} {% if btn_disable %}disabled{% endif %}">
+                                  <i class="bi bi-plus-lg me-1"></i>Add
+                                </button>
+                                <button onclick="addRemoveCart(true)" id="cart-remove" class="btn btn-primary rounded-pill {% if single_item_no_size not in cart_items %}d-none{% endif %} {% if btn_disable %}disabled{% endif %}">
+                                  <i class="bi bi-dash-lg me-1"></i>Remove
+                                </button>
+
+                            </div>
+                        </div>
+                        <hr class="my-6">
+                        <div>
+                            <!-- table -->
+                            <table class="table table-borderless mb-0">
+                                <tbody>
+                                    <tr>
+                                        <td>Product Code:</td>
+                                        <td>{{ product.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Category:</td>
+                                        <td>{{ product.sub_category.category.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sub Category:</td>
+                                        <td>{{ product.sub_category.name }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <div class="my-8">
+                <div class="mb-5">
+                    <!-- text -->
+                    <h4 class="mb-1">Description</h4>
+                    <p class="mb-0">{{ product.description | safe }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- section -->
+    <section class="my-lg-14 my-14">
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-12">
+                    <!-- heading -->
+                    <h3>Related Items</h3>
+                </div>
+            </div>
+            <!-- row -->
+            {% with col=3 %}
+            {% include '../include/product_card.html' with col=col %}
+            {% endwith %}
+        </div>
+    </section>
+
+</main>
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+var sizeBtns = document.querySelectorAll(".size-btn-select");
+var activeSizes = {{ sizes_in_cart|safe }};
+var product = '{{ product.id }}';
+
+const url = '/cart-add-remove'; 
+const csrftoken = '{{ csrf_token }}';
+const headers = {
+    'Content-Type': 'application/json',
+    'X-CSRFToken': csrftoken
+}
+
+const is_auth = '{{ request.user.is_authenticated }}';
+
+if (sizeBtns.length > 0){
+  sizeBtns.forEach(function (button) {
+      button.addEventListener('click', function () {
+        if (is_auth === 'False'){
+            alert("Login to perform action!")
+            return
+        }
+        var index = activeSizes.indexOf(button.getAttribute("data-size"));
+
+        if (index !== -1) {
+            activeSizes.splice(index, 1);
+        } else {
+            activeSizes.push(button.getAttribute("data-size"));
+        }
+
+        this.classList.toggle("active");
+      })
+  })
+
+  function addRemoveCart(remove=false) {
+    if (is_auth === 'False'){
+        alert("Login to perform action!")
+        return
+    }
+    fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({product: product, items: activeSizes, remove: remove, is_reduce: activeSizes.length === 0})
+    })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          document.querySelectorAll('.cart-number-of-items').forEach(e => e.innerText = data.num_in_cart);
+          alert("Cart updated!");
+        })
+        .catch(error => {
+          console.error(error);
+          alert("An error occurred refresh and try again!");
+        });
+    }
+  
+} else {
+  function addRemoveCart(remove=false) {
+    if (is_auth === 'False'){
+        alert("Login to perform action!")
+        return
+    }
+    fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({product: product, items: activeSizes, remove: remove, is_reduce: false})
+    })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          document.querySelectorAll('.cart-number-of-items').forEach(e => e.innerText = data.num_in_cart);
+          document.getElementById('cart-add').classList.toggle('d-none');
+          document.getElementById('cart-remove').classList.toggle('d-none');
+          if (remove){
+            alert("Product removed from cart!");
+          }else {
+            alert("Product added to cart!");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          alert("An error occurred refresh and try again!");
+        });
+    }
+  }
+
+
+</script>
+
+
+<script>
+const imgs = document.querySelectorAll('.img-select a');
+const imgBtns = [...imgs];
+let imgId = 1;
+
+imgBtns.forEach((imgItem) => {
+    imgItem.addEventListener('click', (event) => {
+        event.preventDefault();
+        imgId = imgItem.dataset.id;
+        slideImage();
+    });
+});
+
+function slideImage() {
+    const displayWidth = document.querySelector('.img-showcase img:first-child').clientWidth;
+
+    document.querySelector('.img-showcase').style.transform = `translateX(${- (imgId - 1) * displayWidth}px)`;
+}
+
+window.addEventListener('resize', slideImage);
+</script>
+{% endblock %}
