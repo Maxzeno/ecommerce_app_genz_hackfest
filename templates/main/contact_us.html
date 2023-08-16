@@ -1,0 +1,64 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}Contact us{% endblock %}
+
+{% block content %}
+  <main>
+  <!-- section -->
+  <section>
+    <!-- container -->
+    <div class="container">
+     <div class="row">
+
+        <div class="col-12">
+          <div class="py-6 p-md-6 p-lg-10">
+            <div class="mb-6">
+              <!-- heading -->
+              <h2 class="mb-0">Contact Us</h2>
+            </div>
+            <div>
+            <div class="pe-lg-14">
+              <!-- heading -->
+              <form action="{% url 'main:contact_us' %}" method="post" class="">
+                {% csrf_token %}
+                <!-- input -->
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  {{ form.email }}
+                  {% if form.email.errors %}
+                  {% for error in form.email.errors %}
+                    <span class="text-danger small">{{ error }}</span>
+                  {% endfor %}
+                  {% endif %}
+                </div>
+                <!-- input -->
+                <div class="mb-3 col">
+                  <label class="form-label">Message</label>
+                  {{ form.message }}
+                  {% if form.message.errors %}
+                  {% for error in form.message.errors %}
+                    <span class="text-danger small">{{ error }}</span>
+                  {% endfor %}
+                  {% endif %}
+                </div>
+                <!-- input -->
+                <div class="col-12">
+                  <button class="btn btn-primary">Send</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+
+  </section>
+</main>
+{% endblock %}
