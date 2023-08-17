@@ -1,0 +1,65 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}Address{% endblock %}
+
+{% block content %}
+  <main>
+  <!-- section -->
+  <section>
+    <!-- container -->
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <!-- col -->
+        {% with address='active' %}
+          {% include '../include/little_sidebar.html' with address=address %}
+        {% endwith %}
+        <div class="col-lg-9 col-md-8 col-12">
+          <div class="py-6 p-md-6 p-lg-10">
+            <div class="d-flex justify-content-between align-items-center pb-4 pt-md-1 pt-1">
+              <!-- heading -->
+              <h2 class="mb-0">Address</h2>
+              <button class="btn btn-outline-gray-400 text-muted d-md-none btn-icon btn-sm ms-3 " type="button"
+              data-bs-toggle="offcanvas" data-bs-target="#offcanvasAccount" aria-controls="offcanvasAccount">
+              <i class="bi bi-text-indent-left fs-3"></i>
+            </button>
+            </div>
+            <div>
+              <!-- heading -->
+              <h5 class="mb-4">Account details</h5>
+              <div class="row">
+                <div class="col-lg-5">
+                  <!-- form -->
+                  <form action="{% url 'core:address' %}" method="post">
+                    {% csrf_token %}
+                    <!-- input -->
+                    <div class="mb-3">
+                      <label class="form-label">State</label>
+                      {{ address_form.state }}
+                      
+                    </div>
+                    <!-- input -->
+                    <div class="mb-5">
+                      <label class="form-label">Address</label>
+                      {{ address_form.address }}
+                      
+                    </div>
+                    <!-- button -->
+                    <div class="mb-3">
+                      <button class="btn btn-primary">Save Details</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% with address='active' %}
+  {% include '../include/little_modelbar.html' with address=address %}
+{% endwith %}
+{% endblock %}
