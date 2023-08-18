@@ -40,3 +40,50 @@ class Address(LoginRequiredMixin, Base):
 		messages.warning(request, 'Fill the user address form appropriately')
 		return redirect(reverse('core:address'))
 
+
+
+class Settings(LoginRequiredMixin, Base):
+	def get_request(self, request):
+		user = request.user
+		data_form = UserDataForm({'name': user.name, 'number': user.number, 'image': user.image, 'image': user.image})
+		password_form = UserPasswordForm(user=user)
+		return (request, 'core/settings.html', {'data_form': data_form, 'password_form': password_form, 'nav_account': 'green'})
+
+
+class UserData(LoginRequiredMixin, View):
+	def get(self, request):
+		return redirect(reverse('core:settings'))
+
+	def post(self, request):
+		form = UserDataForm(request.POST, request.FILES)
+		if form.is_valid():
+			user = User.objects.get(pk=request.user.id)
+			user.name = form.cleaned_data.get('name')
+			user.number = form.cleaned_data.get('number')
+			if form.cleaned_data.get('image'):
+				user.image = form.cleaned_data.get('image')
+			user.save()
+			messages.success(request, 'User data updated')
+			return redirect(reverse('core:settings'))
+
+		messages.warning(request, 'Fill the user form appropriately')
+		return redirect(reverse('core:settings'))
+
+
+class UserPassword(LoginRequiredMixin, View):
+	def get(self, request):
+		return redirect(reverse('core:settings'))
+
+	def post(self, request):
+		form = UserPasswordForm(request.POST, user=request.user)
+		if form.is_valid():
+			user = User.objects.get(pk=request.user.id)
+			password = form.cleaned_data.get('password')
+			user.password = password
+			user.save()
+			messages.success(request, 'User password updated')
+			return redirect(reverse('core:settings'))
+
+		messages.warning(request, 'Fill the password form appropriately')
+		return redirect(reverse('core:settings'))
+

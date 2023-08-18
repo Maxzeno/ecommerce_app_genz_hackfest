@@ -1,0 +1,103 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+  <main>
+  <!-- section -->
+  <section>
+    <!-- container -->
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <!-- col -->
+        {% with settings='active' %}
+          {% include '../include/little_sidebar.html' with settings=settings %}
+        {% endwith %}
+
+        <div class="col-lg-9 col-md-8 col-12">
+          <div class="py-6 p-md-6 p-lg-10">
+            <div class="d-flex justify-content-between align-items-center pb-4 pt-md-1 pt-1">
+              <!-- heading -->
+              <h2 class="mb-0">Account Setting</h2>
+              <button class="btn btn-outline-gray-400 text-muted d-md-none btn-icon btn-sm ms-3 " type="button"
+              data-bs-toggle="offcanvas" data-bs-target="#offcanvasAccount" aria-controls="offcanvasAccount">
+              <i class="bi bi-text-indent-left fs-3"></i>
+            </button>
+            </div>
+            <div>
+              <!-- heading -->
+              <h5 class="mb-4">Account details</h5>
+              <div class="row">
+                <div class="col-lg-5">
+                  <!-- form -->
+                  <form action="{% url 'core:user_data' %}" method="post" enctype="multipart/form-data">
+                  	{% csrf_token %}
+                    <!-- input -->
+                    <div class="mb-3">
+                      <label class="form-label">Name</label>
+                      {{ data_form.name }}
+                    </div>
+                    <!-- input -->
+                    <div class="mb-5">
+                      <label class="form-label">Number</label>
+                      {{ data_form.number }}
+                    </div>
+                    <div class="mb-5">
+                      <label class="form-label">Image</label>
+                      {{ data_form.image }}
+                    </div>
+                    <!-- button -->
+                    <div class="mb-3">
+                      <button class="btn btn-primary">Save Details</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <hr class="my-10">
+            <div class="pe-lg-14">
+              <!-- heading -->
+              <h5 class="mb-4">Password</h5>
+              <form action="{% url 'core:user_password' %}" method="post" class=" row row-cols-1 row-cols-lg-2">
+              	{% csrf_token %}
+                <!-- input -->
+                <div class="mb-3 col">
+                  <label class="form-label">New Password</label>
+                  {{ password_form.password }}
+                  {% if password_form.password.errors %}
+                  {% for error in password_form.password.errors %}
+                    <span class="text-danger small">{{ error }}</span>
+                  {% endfor %}
+                  {% endif %}
+                </div>
+                <!-- input -->
+                <div class="mb-3 col">
+                  <label class="form-label">Current Password</label>
+                  {{ password_form.current_password }}
+                  {% if password_form.current_password.errors %}
+                  {% for error in password_form.current_password.errors %}
+                    <span class="text-danger small">{{ error }}</span>
+                  {% endfor %}
+                  {% endif %}
+                </div>
+                <!-- input -->
+                <div class="col-12">
+                  <p class="mb-4">Can’t remember your current password?<a href="{% url 'login:forgot-password' %}"> Reset your password.</a></p>
+                  <button class="btn btn-primary">Save Password</button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% with settings='active' %}
+  {% include '../include/little_modelbar.html' with settings=settings %}
+{% endwith %}
+
+{% endblock %}
