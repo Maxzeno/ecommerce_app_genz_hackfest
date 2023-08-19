@@ -1,0 +1,113 @@
+{% extends '../base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+  <main>
+  <!-- section -->
+  <section>
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <!-- col -->
+        {% with cart='active' %}
+          {% include '../include/little_sidebar.html' with cart=cart %}
+        {% endwith %}
+        <div class="col-lg-9 col-md-8 col-12">
+          <div class="py-6 p-md-6 p-lg-10">
+            <!-- heading -->
+            <div class="d-flex justify-content-between align-items-center pb-4 pt-md-1 pt-1">
+              <!-- heading -->
+              <h2 class="mb-0">Shop Cart</h2>
+              <button class="btn btn-outline-gray-400 text-muted d-md-none btn-icon btn-sm ms-3 " type="button"
+              data-bs-toggle="offcanvas" data-bs-target="#offcanvasAccount" aria-controls="offcanvasAccount">
+              <i class="bi bi-text-indent-left fs-3"></i>
+            </button>
+            </div>
+
+    <div class="">
+
+      <ul class="list-group list-group-flush">
+        <!-- list group -->
+        {% for item in cart_items %}
+        <li id="product{{ item.pk }}" class="list-group-item py-3 ps-0 border-bottom">
+          <!-- row -->
+          <div class="row align-items-center">
+            <div class="col-3 col-md-2">
+              <!-- img --> <img src="{{ item.product.image|image_url }}" alt="Ecommerce"
+                class="img-fluid"></div>
+            <div class="col-3 col-md-4 col-lg-5">
+              <!-- title -->
+              <a href="{% url 'main:product_detail' pk=item.product.pk %}" class="text-inherit">
+                <h6 class="mb-0 ellipsis-oneline">{{ item.product.name }} {% if item.product_size %} ({{ item.product_size }}) {% endif %}</h6>
+              </a>
+              <!-- text -->
+              <div class="mt-2 small lh-1"> 
+                <a style="cursor: pointer;" onclick="remove_cart('{{ item.pk }}')" class="text-decoration-none text-inherit"> 
+                <span class="me-md-1 me-0 align-text-bottom d-sm-inline d-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="feather feather-trash-2 text-success">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                      </path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </span>
+                  <span class="text-muted">Remove</span>
+                </a>
+                </div>
+            </div>
+            <!-- input group -->
+            <div class="col-3 col-md-4 col-lg-3 p-0">
+              <!-- input -->
+              <!-- input -->
+              <form action="i need to fill this" class="input-group input-spinner  ">
+                <input onclick="minus_cart(this, '{{ item.pk }}')" type="button" value="-" class="btn btn-sm " data-field="quantity">
+                <input type="number" step="1" max="10" value="{{ item.quantity }}" name="quantity"
+                  class="quantity-field form-control-sm form-input">
+                <input onclick="plus_cart(this, '{{ item.pk }}')" type="button" value="+" class="btn btn-sm " data-field="quantity">
+              </form>
+
+            </div>
+            <!-- price -->
+            <div class="col-3 text-lg-end text-start text-md-end col-md-2">
+              <span class="fw-bold">₦{{ item.total_price|format_price }}</span>
+
+            </div>
+          </div>
+
+        </li>
+        {% endfor %}
+      </ul>
+      <div id="total-price" class="fw-bold mt-3 text-end">
+        ₦{{ total }}
+      </div>
+      <!-- btn -->
+      <div class="d-flex justify-content-between mt-4">
+        <a href="/products" class="btn btn-primary">Continue Shopping</a>
+        <a href="{% url 'core:checkout' %}" class="btn btn-dark">Checkout</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+ 
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+{% with cart='active' %}
+  {% include '../include/little_modelbar.html' with cart=cart %}
+{% endwith %}
+
+{% endblock %}

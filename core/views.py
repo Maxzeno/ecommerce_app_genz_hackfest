@@ -17,6 +17,104 @@ from .forms import UserDataForm, UserPasswordForm, AddressForm, PaymentProveForm
 from main.views import Base
 
 
+
+class Cart(LoginRequiredMixin, Base):
+	def get_request(self, request):
+		items = CartModel.objects.filter(buyer=request.user, checked_out=False)
+		total = 0
+		for item in items:
+			total += item.total_price()
+		return (request, 'core/cart.html', {'cart_items': items, 'total': '{:,.2f}'.format(total), 'nav_account': 'green'})
+
+
+class CartAddRemove(LoginRequiredMixin, View):
+	def post(self, request):
+		data = json.loads(request.body.decode('utf-8'))
+		product_pk = data.get('product')
+		items = data.get('items')
+		remove = data.get('remove')
+		is_reduce = data.get('is_reduce')
+
+		product = Product.objects.filter(pk=product_pk).first()
+
+		if not product or not product.is_approved:
+			return JsonResponse({'ok': False})
+
+		total = 0
+		for item in items:
+			cart_item, created = CartModel.objects.get_or_create(buyer=request.user, product=product, product_size=item, checked_out=False)
+
+		to_delete = CartModel.objects.filter(buyer=request.user, product=product, checked_out=False)\
+			.exclude(product_size__in=items)
+		to_delete.delete()
+
+		if not items and not is_reduce:
+			cart_item, created = CartModel.objects.get_or_create(buyer=request.user, product=product, checked_out=False)
+
+		if remove:
+			to_delete = CartModel.objects.filter(buyer=request.user, product=product, checked_out=False)
+			to_delete.delete()
+
+		num_in_cart = CartModel.objects.filter(buyer=request.user, checked_out=False).count()
+
+		return JsonResponse({'ok': True, 'num_in_cart': num_in_cart})
+
+
+class CartPlus(LoginRequiredMixin, Base):
+	def get_request(self, request, pk):
+		cart_item = CartModel.objects.filter(pk=pk).first()
+		if not cart_item:
+			return JsonResponse({'ok': False})
+
+		cart_item.quantity += 1
+		cart_item.save()
+
+		total = 0
+		items = CartModel.objects.filter(buyer=request.user, checked_out=False)
+		for item in items:
+			total += item.total_price()
+
+		return JsonResponse({'ok': True, 
+			'price': '{:,.2f}'.format(cart_item.product.price * cart_item.quantity), 
+			'total': '{:,.2f}'.format(total)
+			})
+
+
+class CartMinus(LoginRequiredMixin, Base):
+	def get_request(self, request, pk):
+		cart_item = CartModel.objects.filter(pk=pk).first()
+		if not cart_item:
+			return JsonResponse({'ok': False})
+
+		cart_item.quantity = cart_item.quantity -1 if cart_item.quantity > 1 else 1
+		cart_item.save()
+
+		total = 0
+		items = CartModel.objects.filter(buyer=request.user, checked_out=False)
+		for item in items:
+			total += item.total_price()
+
+		return JsonResponse({'ok': True, 
+			'price': '{:,.2f}'.format(cart_item.product.price * cart_item.quantity), 
+			'total': '{:,.2f}'.format(total)
+			})
+
+
+class CartRemove(LoginRequiredMixin, Base):
+	def get_request(self, request, pk):
+		cart_item = CartModel.objects.filter(pk=pk).first()
+		if not cart_item:
+			return JsonResponse({'ok': False})
+
+		cart_item.delete()
+
+		items = CartModel.objects.filter(buyer=request.user, checked_out=False)
+		total = 0
+		for item in items:
+			total += item.total_price()
+		return JsonResponse({'ok': True, 'total': '{:,.2f}'.format(total)})
+
+
 class Address(LoginRequiredMixin, Base):
 	def get_request(self, request):
 		user = request.user
