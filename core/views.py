@@ -17,6 +17,100 @@ from .forms import UserDataForm, UserPasswordForm, AddressForm, PaymentProveForm
 from main.views import Base
 
 
+class VerifyPaystackPayment(LoginRequiredMixin, Base):
+	PAYSTACK_SECRET_KEY = settings.PAYSTACK_SECRET_KEY
+	paystack_base_url = 'https://api.paystack.co'
+
+	def get_request(self, request, ref): 
+		verify_payment = self.verify_payment(ref)
+
+		if verify_payment['status']:
+			messages.success(request, "Your payment is processing")
+			return redirect(reverse('core:orders'))
+			
+		messages.warning(request, "Your payment failed you may need to contact admin")
+		return redirect(reverse('main:contact'))
+
+
+	def verify_payment(self, ref, *args, **kwargs):
+		path = f"/transaction/verify/{ref}"
+		headers = {
+			"Authorization": f"Bearer {self.PAYSTACK_SECRET_KEY}",
+			"Content-Type": "application/json"
+		}
+		url = self.paystack_base_url + path
+
+		res = requests.get(url, headers=headers)
+		res_data = res.json()
+		return res_data
+
+
+class TransferPayment(LoginRequiredMixin, Base):
+	def post_request(self, request):
+		try:
+			with transaction.atomic():
+				payment_prove_form = PaymentProveForm(request.POST, request.FILES)
+
+				order = Order()
+				items = CartModel.objects.filter(buyer=request.user, checked_out=False)
+				order.buyer = request.user
+				order.save()
+				order.items.set(items)
+
+				# get the image from the form
+				image_field = request.FILES['image']
+
+				payment_prove = TransferPaymentModel(buyer=request.user, order=order, image=image_field)
+				payment_prove.save()
+				items.update(checked_out=True)
+
+				messages.success(request, 'Transfer prove submitted admin will review')
+				return redirect(reverse('core:orders'))
+		except Exception:
+			messages.warning(request, 'An error occured try again')
+			return redirect(reverse('core:checkout'))
+
+
+class Checkout(LoginRequiredMixin, Base):
+	def get_request(self, request):
+		if not request.user.state and not request.user.address:
+			request.session['back_to_checkout'] = 'core:checkout'
+			messages.warning(request, 'Add state and address before you can checkout')
+			return redirect(reverse('core:address'))
+
+
+		payment_prove_form = PaymentProveForm()
+		items = CartModel.objects.filter(buyer=request.user, checked_out=False)
+		PAYSTACK_PUBLIC_KEY = settings.PAYSTACK_PUBLIC_KEY
+		
+		bank_account = TransferBankAccount.objects.order_by('-date').first()
+		delivery_price = DeliveryPrice.objects.order_by('-date').first()
+
+		total = 0
+		for item in items:
+			total += item.total_price()
+
+		if delivery_price:
+			total += delivery_price.price
+
+		paystack_total = total * 100 # this is because paystack 100 == 1 naira
+		
+		items_str = ''
+		for i in items.values_list('pk'):
+			items_str += f'{i[0]} '
+
+		return (request, 'core/checkout.html', {
+			'total': '{:,.2f}'.format(total), 
+			'paystack_total': paystack_total,
+			'items': items, 
+			'items_str': items_str.strip(),
+			'nav_account': 'green',
+			'PAYSTACK_PUBLIC_KEY': PAYSTACK_PUBLIC_KEY,
+			'payment_prove_form': payment_prove_form,
+			'bank_account': bank_account,
+			'delivery_price': delivery_price,
+		})
+
 
 class Cart(LoginRequiredMixin, Base):
 	def get_request(self, request):

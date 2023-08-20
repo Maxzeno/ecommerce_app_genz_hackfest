@@ -28,6 +28,79 @@ def error_404(request, exception):
 # def error_500(request):
     # return render(request, 'main/500.html', status=500)
 
+@method_decorator(csrf_exempt, name='dispatch')
+class WebhookVerifyPaystackPayment(View):
+	PAYSTACK_SECRET_KEY = settings.PAYSTACK_SECRET_KEY
+	paystack_base_url = 'https://api.paystack.co'
+
+	def post(self, request, *args, **kwargs):
+		try:
+			with transaction.atomic():
+				resp = json.loads(request.body.decode('utf-8'))
+				payment_data = resp['data']
+				ref = payment_data['reference']
+				verify_payment = self.verify_payment(ref)
+
+				cart_products_id_str = payment_data['metadata']['order_id'].split(' ')
+				cart_products_id = list(map(int, cart_products_id_str))
+
+				if not verify_payment['status']:
+					messages.warning(request, verify_payment['message'])
+					return HttpResponse(status=200)
+
+				order = Order()
+				items = CartModel.objects.filter(id__in=cart_products_id, checked_out=False)
+				delivery_price = DeliveryPrice.objects.order_by('-date').first()
+				
+				if not items:
+					return HttpResponse(status=200)
+
+				total = 0
+				for item in items:
+					total += item.total_price()
+
+				if delivery_price:
+					total += delivery_price.price
+
+				order.buyer = items[0].buyer
+
+				if not (total * 100 <= verify_payment['data']['amount'] + delivery_price.price):
+					order.paid = verify_payment['data']['amount'] / 100
+					order.incomplete_payment = True
+					order.paystack_ref = ref
+					order.save()
+					order.items.set(items)
+					items.update(checked_out=True)
+					return HttpResponse(status=200)
+
+				order.has_paid = True
+				order.paid = total
+				order.paystack_ref = ref
+
+				if delivery_price:
+					order.delivery_fee = delivery_price.price
+
+				order.save()
+				order.items.set(items)
+				items.update(checked_out=True)
+
+				return HttpResponse(status=200)
+		except:
+			return HttpResponse(status=500)
+
+
+	def verify_payment(self, ref, *args, **kwargs):
+		path = f"/transaction/verify/{ref}"
+		headers = {
+			"Authorization": f"Bearer {self.PAYSTACK_SECRET_KEY}",
+			"Content-Type": "application/json"
+		}
+		url = self.paystack_base_url + path
+
+		res = requests.get(url, headers=headers)
+		res_data = res.json()
+		return res_data
+
 
 class Base(View):
 	base_context = {**popular_categories(), 'cart_items': [], 'product_in_cart': []}

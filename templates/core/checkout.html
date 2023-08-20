@@ -1,0 +1,177 @@
+{% extends '../base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+ <main class="">
+      <div class="container">
+        <div class="row mb-8">
+        {% with cart='active' %}
+          {% include '../include/little_sidebar.html' with cart=cart %}
+        {% endwith %}
+          <div class="col-lg-9 col-md-8 col-12">
+          <div class="py-6 p-md-6 p-lg-10">
+            <!-- page header -->
+            <div class="d-flex justify-content-between align-items-center pb-4 pt-md-1 pt-1">
+              <!-- heading -->
+              <h2 class="mb-0">Checkout</h2>
+              <div>
+                <a href="{% url 'core:cart' %}" class="btn btn-light d-md-none d-inline">Cart</a>
+                <a href="{% url 'core:cart' %}" class="btn btn-light d-md-inline d-none">Back Cart</a>
+              <button class="btn btn-outline-gray-400 text-muted d-md-none btn-icon btn-sm ms-3 " type="button"
+              data-bs-toggle="offcanvas" data-bs-target="#offcanvasAccount" aria-controls="offcanvasAccount">
+              <i class="bi bi-text-indent-left fs-3"></i>
+            </button>
+          </div>
+            </div>
+
+        <!-- row -->
+        <div class="row ">
+          <div class="col-xl-12 col-12 mb-5">
+            <!-- card -->
+            <div class="card h-100 card-lg">
+              <div class="card-body p-6">
+                <div class="d-md-flex justify-content-between">
+                  <div class="d-flex align-items-center mb-2 mb-md-0">
+                    <h2 class="mb-0">Place Order</h2>
+                    
+                  </div>
+                </div>
+                <div class="table-responsive-xxl border-0 mt-3">
+              <!-- Table -->
+              <table class="table mb-0 text-nowrap table-centered ">
+                <!-- Table Head -->
+                <thead class="bg-light">
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Product id</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Table body -->
+                  {% for item in items %}
+                  <tr>
+                    <td class="align-middle border-top-0">
+                      <a href="{% url 'main:product_detail' pk=item.pk %}" class="text-reset">
+                      <img src="{{ item.product.image|image_url }}" class="img-fluid" style="max-height: 80px">
+                    </a>
+                    </td>
+                    <td class="align-middle border-top-0">
+                      <a href="{% url 'main:product_detail' pk=item.pk %}" class="text-reset">
+                        {{ item.product.name }} {% if item.product_size %} ({{ item.product_size }}) {% endif %}
+                      </a>
+                    </td>
+                    <td class="align-middle border-top-0">
+                      {{ item.product.pk }}
+                    </td>
+                     <td class="align-middle border-top-0">
+                      {{ item.quantity }}
+                    </td>
+                    <td class="align-middle border-top-0">
+                      ₦{{ item.total_price|format_price }}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="fw-bold pt-3 border-top d-flex justify-content-between">
+                <div>Delivery Price</div>
+                <div>₦{{ delivery_price.price }}</div>
+              </div>
+              <div id="total-price" class="fw-bold py-2 d-flex justify-content-between">
+                <div>Total Price</div>
+                <div>₦{{ total }}</div>
+              </div>
+              <!-- btn -->
+              <div class="d-flex justify-content-between mt-4">
+                <a class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                      href="#offcanvasExample" role="button" aria-controls="offcanvasRight">Transfer</a>
+                <button id="checkout" class="btn btn-dark ms-2">Paystack</button>
+              </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+      </div>
+      </div>
+    </main>
+
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header border-bottom">
+    <div class="text-start">
+      <h5 id="offcanvasRightLabel" class="mb-0 fs-4">Transfer to bank</h5>
+    </div>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+
+    <div class="">
+
+      <div class="h5 mt-2">Bank Payment</div>
+      <div class="mt-4">Bank: {{ bank_account.bank_name }}</div>
+      <div class="mt-4">Account Name: {{ bank_account.account_name }}</div>
+      <div class="mt-4">Account Number: {{ bank_account.bank_number }}</div>
+      <div class="mt-4">
+        <div class="mb-2">Prove of payment</div>
+        <form action="{% url 'core:transfer_payment' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ payment_prove_form.image }}
+                <!-- btn -->
+          <div class="mt-5">
+            <button type="submit" class="btn btn-dark">Submit</button>
+          </div>
+        </form>
+
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+
+{% with cart='active' %}
+  {% include '../include/little_modelbar.html' with cart=cart %}
+{% endwith %}
+
+{% endblock %}
+
+{% block script %}
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<script>
+
+const checkout = document.getElementById('checkout');
+checkout.addEventListener("click", payWithPaystack);
+async function payWithPaystack(e) {
+  e.preventDefault();
+
+
+  let handler = PaystackPop.setup({
+    key: '{{ PAYSTACK_PUBLIC_KEY }}', 
+    email: '{{ request.user.email }}',
+    amount: '{{ paystack_total }}',
+    metadata: {
+      order_id: '{{ items_str }}' // pass the order ID as metadata to the Paystack API
+    },
+
+    callback: function(response){
+      window.location.href = `/verify-paystack-payment/${response.reference}`
+    }
+  });
+
+  handler.openIframe();
+}
+</script>
+{% endblock %}
