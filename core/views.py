@@ -16,6 +16,8 @@ from .models import (
 from .forms import UserDataForm, UserPasswordForm, AddressForm, PaymentProveForm
 from main.views import Base
 
+# Create your views here.
+
 
 class VerifyPaystackPayment(LoginRequiredMixin, Base):
 	PAYSTACK_SECRET_KEY = settings.PAYSTACK_SECRET_KEY
@@ -209,6 +211,22 @@ class CartRemove(LoginRequiredMixin, Base):
 		return JsonResponse({'ok': True, 'total': '{:,.2f}'.format(total)})
 
 
+# lots of bugs
+class OrderCreate(LoginRequiredMixin, Base):
+	def get_request(self, request, pk):
+		return redirect(reverse('core:order_detail', kwargs={'pk': pk}))
+
+	def post_request(self, request, pk):
+		# body
+		# return redirect(reverse('core:order_detail', kwargs={'pk':order.pk}))
+		pass
+
+class Orders(LoginRequiredMixin, Base):
+	def get_request(self, request):
+		orders = Order.objects.filter(buyer=request.user.id).order_by('-date')
+		return (request, 'core/orders.html', {'orders': orders, 'nav_account': 'green'})
+
+
 class Address(LoginRequiredMixin, Base):
 	def get_request(self, request):
 		user = request.user
@@ -231,7 +249,6 @@ class Address(LoginRequiredMixin, Base):
 
 		messages.warning(request, 'Fill the user address form appropriately')
 		return redirect(reverse('core:address'))
-
 
 
 class Settings(LoginRequiredMixin, Base):
