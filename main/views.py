@@ -59,12 +59,15 @@ class WebhookVerifyPaystackPayment(View):
 				for item in items:
 					total += item.total_price()
 
+				our_delivery_price = 0
+
 				if delivery_price:
 					total += delivery_price.price
+					our_delivery_price = delivery_price.price
 
 				order.buyer = items[0].buyer
 
-				if not (total * 100 <= verify_payment['data']['amount'] + delivery_price.price):
+				if not (total * 100 <= verify_payment['data']['amount'] + our_delivery_price):
 					order.paid = verify_payment['data']['amount'] / 100
 					order.incomplete_payment = True
 					order.paystack_ref = ref

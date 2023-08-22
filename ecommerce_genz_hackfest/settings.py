@@ -34,7 +34,7 @@ TRY_LOCAL_DB = bool(int(config('TRY_LOCAL_DB', 0)))
 TRY_LOCAL_STORAGE = bool(int(config('TRY_LOCAL_STORAGE', 0)))
 TRY_LOCAL_EMAIL = bool(int(config('TRY_LOCAL_EMAIL', 0)))
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app', '.now.sh']
 
 _ALLOWED_HOST = config('ALLOWED_HOST')
 if _ALLOWED_HOST:
@@ -133,7 +133,6 @@ else:
             'PASSWORD': config('DATABASES_DEFAULT_PASSWORD'),
         }
     }
-
 
 
 # Password validation
